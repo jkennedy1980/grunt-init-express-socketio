@@ -18,6 +18,7 @@
 		console.log( "Socket connected" );
 
 		socket.on( 'testMessage', function( data ){
+			console.log( "Got a test message", data );
 			socket.emit( 'testResponse', { "message" : "Sockets are working!" } );
 		});
 	};

@@ -1,22 +1,34 @@
 
 var app = {
 
-	initHome : function(){
+	common: {
+		init: function() {
+			console.log( "STARTING common->init" );
+		}
+	},
 
-		var socket = io.connect();
-		socket.on( 'news', function( data ){
-			console.log( "Getting a socket message", data );
-			socket.emit( 'my other event', { my: 'data' } );
-		});
+	home:{
+		init: function(){
 
+			console.log( "STARTING home->init" );
+
+			var socket = io.connect();
+
+			socket.on( 'testResponse', function( data ){
+				console.log( "Getting a socket response", data );
+				$('#response').text( data.message );
+			});
+
+			socket.emit( 'testMessage', { "message" : "hey man!" } );
+
+		}
 	}
-
-}
+};
 
 UTIL = {
-	exec: function( controller, action ) {
-		var ns = SITENAME,
-		action = ( action === undefined ) ? "init" : action;
+	exec: function( controller, _action ){
+		var ns = app;
+		var action = ( typeof(_action) === 'undefined' ) ? "init" : _action;
 
 		if( controller !== "" && ns[controller] && typeof ns[controller][action] == "function" ){
 			ns[controller][action]();
@@ -29,7 +41,7 @@ UTIL = {
 		action = body.getAttribute( "data-action" );
 
 		UTIL.exec( "common" );
-		UTIL.exec( controller );
+		if( action !== 'init' ) UTIL.exec( controller );
 		UTIL.exec( controller, action );
 	}
 };
