@@ -1,5 +1,5 @@
 
-var app = {
+var {%= js_module_name_space %} = {
 
 	common: {
 		init: function() {
@@ -27,7 +27,7 @@ var app = {
 
 UTIL = {
 	exec: function( controller, _action ){
-		var ns = app;
+		var ns = {%= js_module_name_space %};
 		var action = ( typeof(_action) === 'undefined' ) ? "init" : _action;
 
 		if( controller !== "" && ns[controller] && typeof ns[controller][action] == "function" ){
