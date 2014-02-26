@@ -1,5 +1,5 @@
 /*
- * grunt-init-express-mocha
+ * grunt-init-express-socketio
  *
  * Copyright (c) 2014 Joshua Kennedy
  * Licensed under the MIT license.
