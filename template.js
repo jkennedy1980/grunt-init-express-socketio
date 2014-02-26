@@ -67,11 +67,15 @@ exports.template = function( grunt, init, done ){
 		};
 
 		props.devDependencies = {
-			"grunt-contrib-jshint": "~0.6.4",
+			"grunt": "~0.4.2",
+			"grunt-contrib-jshint": "~0.8.0",
 			"grunt-contrib-watch": "~0.5.3",
-			"grunt": "~0.4.1",
+			"grunt-contrib-less": "0.9.0",
+			"grunt-contrib-concat": "0.3.0",
+			"grunt-contrib-uglify": "0.3.2",
+			"grunt-contrib-cssmin": "0.8.0",
+			"mocha": "~1.17.0",
 			"grunt-simple-mocha": "~0.4.0",
-			"mocha": "~1.13.0"
 		};
 
 		// Add properly-named license files.
