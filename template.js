@@ -75,7 +75,7 @@ exports.template = function( grunt, init, done ){
 			"grunt-contrib-uglify": "0.3.2",
 			"grunt-contrib-cssmin": "0.8.0",
 			"mocha": "~1.17.0",
-			"grunt-simple-mocha": "~0.4.0",
+			"grunt-simple-mocha": "~0.4.0"
 		};
 
 		// Add properly-named license files.
