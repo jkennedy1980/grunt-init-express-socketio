@@ -13,6 +13,7 @@ var _ = require('underscore');
 var flash = require('connect-flash');
 var colors = require('colors');
 var sockets = require('../lib/app-sockets.js');
+var requireMany = require('../lib/requireMany.js');
 
 var port = process.env.PORT || 80;
 
@@ -24,9 +25,6 @@ app.configure( 'production', function(){
 
 });
 
-app.get( "/", function( req, res ){
-	res.render('index.html');
-});
 
 
 // WEB SERVER FOR STATICISH CONTENT
@@ -46,6 +44,9 @@ app.use( app.router );
 
 // START SOCKET.IO
 sockets.init( server );
+
+// LOAD EXPRESS ROUTES
+console.log( requireMany( '../routes' )( app ) );
 
 
 // FINAL INITIALIZATION
