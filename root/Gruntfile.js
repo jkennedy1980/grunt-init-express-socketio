@@ -74,6 +74,27 @@ module.exports = function(grunt) {
 			}
 		},
 
+		eslint: {
+			options: {
+				rulesdir: ['config/eslint-rules']
+			},
+			nodeFiles: {
+				files: {
+					src: ['routes/**/*.js', 'lib/**/*.js', 'apps/**/*.js']
+				},
+				options: {
+					config: "config/eslint-node.json"
+				}
+			},
+			browserFiles: {
+				files: {
+					src: ['public/js/**/*.js']
+				},
+				options: {
+					config: "config/eslint-browser.json"
+				}
+			}
+		},
 
 		simplemocha: {
 			all: { src: 'test/**/*-test.js' }
@@ -99,7 +120,8 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks( 'grunt-contrib-concat' );
 	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
 	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
- 
+	grunt.loadNpmTasks( 'grunt-eslint' );
+
 	grunt.registerTask( 'deploy', ['jshint', 'less', 'concat', 'uglify', 'cssmin']);
 	grunt.registerTask( 'default', ['jshint', 'less', 'concat', 'uglify', 'cssmin', 'watch']);
 	grunt.registerTask( 'test', ['simplemocha']);

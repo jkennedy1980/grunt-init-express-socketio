@@ -12,7 +12,7 @@
 			exports.socketConnection( socket );
 		});
 
-	}
+	};
 
 	exports.socketConnection = function( socket ){
 		console.log( "Socket connected" );
@@ -28,7 +28,7 @@
 
 			console.log( "Socket Disconnected" );
 
-		}
+		};
 	};
 
 })();

@@ -1,0 +1,18 @@
+{
+	"env": {
+		"browser": false,
+		"node": true
+	},
+	"globals": {
+		"var1": true,
+		"var2": false
+	},
+	"rules": {
+		// 0=off; 1=Warning; 2=Error
+		"eol-last": 0,
+		"no-use-before-define": ,
+		"quotes": 0,
+		"no-unused-vars": [ 2, { "vars": "all", "args": "none" } ],
+		"no-underscore-dangle": 0
+	}
+}
