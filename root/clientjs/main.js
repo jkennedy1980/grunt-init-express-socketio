@@ -30,7 +30,7 @@ UTIL = {
 		var ns = {%= js_module_name_space %};
 		var action = ( typeof(_action) === 'undefined' ) ? "init" : _action;
 
-		if( controller !== "" && ns[controller] && typeof ns[controller][action] == "function" ){
+		if( controller !== "" && ns[controller] && typeof ns[controller][action] === "function" ){
 			ns[controller][action]();
 		}
 	},

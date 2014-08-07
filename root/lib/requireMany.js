@@ -32,9 +32,11 @@
 		for( var propertyName in modules ){
 			if( modules.hasOwnProperty( propertyName ) ){
 				var module = modules[ propertyName ];
-				if( typeof module[ functionName ] === 'function' ){
+				if( functionName === 'apply' && typeof module === 'function' ){
+					module.apply( module, argumentsArray );
+				}else if( typeof module[ functionName ] === 'function' ){
 					module[ functionName ].apply( module, argumentsArray );
-				} else {
+				}else{
 					console.warn( 'Module has no \'' + functionName + '\' function: ', propertyName );
 				}
 			}

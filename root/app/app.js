@@ -45,8 +45,10 @@ app.use( app.router );
 // START SOCKET.IO
 sockets.init( server );
 
+
 // LOAD EXPRESS ROUTES
-console.log( requireMany( '../routes' ).apply( app ) );
+var loadedRoutes = requireMany( '../routes' );
+loadedRoutes.apply( app );
 
 
 // FINAL INITIALIZATION

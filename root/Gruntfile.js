@@ -1,35 +1,20 @@
 'use strict';
 
-module.exports = function(grunt) {
+module.exports = function( grunt ){
+
+	require('load-grunt-tasks')( grunt );
 
 	grunt.initConfig({
 
 		pkg: grunt.file.readJSON('package.json'),
 
-		jshint: {
-			options: {
-				browser: true,
-				globals: {
-					jQuery: true
-				}
-			},
-			all: {
-				files: {
-					src: ['public/js/main.js']
-				}
-			}
-		},
-
 		less: {
-			dev: {
-				files: {
-					'public/css/main.css': 'less/main.less'
-				}
-			},
-			production: {
+			src: {
 				options: {
-					cleancss: true,
-					report: 'gzip'
+					strictMath: true,
+					sourceMap: true,
+					outputSourceFiles: true,
+					sourceMapFilename: 'public/css/main.css.map'
 				},
 				files: {
 					'public/css/main.css': 'less/main.less'
@@ -37,47 +22,58 @@ module.exports = function(grunt) {
 			}
 		},
 
-		concat: {
-			js: {
-				src: [
-					'public/js/bootstrap.min.js',
-					'public/js/main.js'
-					// Not including jQuery because it will mostly come from the CDN and we don't want to download it twice
-				], 
-				dest: 'public/js/main.concat.js'
+		csslint: {
+			options: {
+				csslintrc: 'less/.csslintrc'
 			},
-			css: {
-				src: [
-					'public/css/bootstrap.min.css',
-					'public/css/bootstrap-theme.min.css',
-					'public/css/main.css'
-				],
-				dest: 'public/css/main.concat.css'
+			src: [
+				'public/css/main.css'
+			]
+		},
+
+		cssmin: {
+			options: {
+				compatibility: 'ie8',
+				keepSpecialComments: '*',
+				noAdvanced: true
+			},
+			core: {
+				files: {
+					'public/css/main.min.css': 'public/css/main.css'
+				}
 			}
 		},
 
 		uglify: {
 			options: {
-				banner: '/*! <%= pkg.name %> v<%= pkg.version %>, <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+				banner: '/*! <%= pkg.name %> v<%= pkg.version %>, <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+				compress: {
+					drop_console: false
+				}
 			},
-			js: {
+			clientjs: {
 				files: {
-					'public/js/main.min.js': ['public/js/main.concat.js']
+					'public/js/main.min.js': [
+						'clientjs/bootstrap/transition.js',
+						'clientjs/bootstrap/alert.js',
+						'clientjs/bootstrap/button.js',
+						'clientjs/bootstrap/carousel.js',
+						'clientjs/bootstrap/collapse.js',
+						'clientjs/bootstrap/dropdown.js',
+						'clientjs/bootstrap/modal.js',
+						'clientjs/bootstrap/tooltip.js',
+						'clientjs/bootstrap/popover.js',
+						'clientjs/bootstrap/scrollspy.js',
+						'clientjs/bootstrap/tab.js',
+						'clientjs/bootstrap/affix.js',
+						'clientjs/main.js'
+					]
 				}
 			}
 		},
 
-		cssmin: {
-			css: {
-				src: "public/css/main.concat.css",
-				dest: "public/css/main.min.css"
-			}
-		},
-
 		eslint: {
-			options: {
-				rulesdir: ['config/eslint-rules']
-			},
+			options: {},
 			nodeFiles: {
 				files: {
 					src: ['routes/**/*.js', 'lib/**/*.js', 'apps/**/*.js']
@@ -88,7 +84,7 @@ module.exports = function(grunt) {
 			},
 			browserFiles: {
 				files: {
-					src: ['public/js/**/*.js']
+					src: ['clientjs/*.js'] // use ignores to skip bootstrap once grunt-eslint supports it
 				},
 				options: {
 					config: "config/eslint-browser.json"
@@ -101,29 +97,47 @@ module.exports = function(grunt) {
 		},
 
 		watch: {
-			client_js: {
-				files: ['public/js/main.js'],
-				tasks: ['jshint','concat:js','uglify'],
+			clientjs: {
+				files: ['clientjs/*.js'],
+				tasks: ['uglify'],
 			},
 			less: {
 				files: 'less/**/*.less',
-				tasks: ['less','concat:css','cssmin:css'],
+				tasks: ['recess'],
 			}
 		},
 
+		supervisor: {
+			sup: {
+				script: "app/app.js",
+				extensions: "js,html,json,ejs",
+				debug: true
+			}
+		},
+
+		open: {
+			localServer: {
+				path: 'http://localhost',
+				app: 'Google Chrome'
+			},
+		},
+
+		retire: {
+			js: ['lib/**/*.js','app/**/*.js', 'routes/**/*.js'],
+			node: ['node']
+		}
+
 	});
 
-  	grunt.loadNpmTasks( 'grunt-contrib-less' );
-	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
-	grunt.loadNpmTasks( 'grunt-simple-mocha' );
-	grunt.loadNpmTasks( 'grunt-contrib-watch' );
-	grunt.loadNpmTasks( 'grunt-contrib-concat' );
-	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
-	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
-	grunt.loadNpmTasks( 'grunt-eslint' );
 
-	grunt.registerTask( 'deploy', ['jshint', 'less', 'concat', 'uglify', 'cssmin']);
-	grunt.registerTask( 'default', ['jshint', 'less', 'concat', 'uglify', 'cssmin', 'watch']);
+	grunt.registerTask( 'compileCss', ['less', 'cssmin']);
+	grunt.registerTask( 'compileJs', ['uglify']);
+
+	grunt.registerTask( 'lintCss', ['less', 'csslint']);
+	grunt.registerTask( 'lintJs', ['eslint']);
+
+	grunt.registerTask( 'default', ['lintJs', 'lintCss', 'compileJs', 'compileCss']);
 	grunt.registerTask( 'test', ['simplemocha']);
+	grunt.registerTask( 'start', ['compileCss', 'compileJs', 'supervisor', 'open']);
 
 };
